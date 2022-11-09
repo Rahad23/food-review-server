@@ -21,10 +21,28 @@ const collectionComment = client.db("AllFood").collection("feedback");
 
 
 
+// verify jwt token valid user
+function verifyJwt(req, res, next){
+    const authorize = req.headers.authorization;
+    if(!authorize){
+        console.log("No header");
+      return res.status(401).send({message: "Unauthorize user"});
+    }
+    const key = authorize.split(' ')[1];
+
+    jwt.verify(key, process.env.SECURITY_KEY, function(err, decode){
+      if(err){
+        console.log(err)
+        return res.status(401).send({message: "Unauthorize user"});
+      }
+      req.decode = decode;
+      next();
+    })
+}
 
 app.post('/jwt', (req, res)=>{
     const userEmail = req.body;
-    const token = jwt.sign(user, process.env.SECURITY_KEY, {expiresIn: '5d'});
+    const token = jwt.sign(userEmail, process.env.SECURITY_KEY, {expiresIn: '5d'});
     res.send({token});
 })
 
@@ -172,7 +190,13 @@ app.delete('/comment/:id', async(req, res)=>{
 
 
 // service user review fiend
-app.get('/userReview/:email', async(req, res)=>{
+app.get('/userReview/:email', verifyJwt, async(req, res)=>{
+    console.log("userReview");
+    const email = req.decode.email;
+
+    if(email !== req.params.email){
+       return res.status(403).send({message: "unauthorize access"})
+    }
    try{
     const useremail = req.params?.email;
     if(useremail){
@@ -181,7 +205,6 @@ app.get('/userReview/:email', async(req, res)=>{
         const result = await cursor.toArray();
         res.send(result);
     }
-    console.log(email);
    }
    catch(e){
 
