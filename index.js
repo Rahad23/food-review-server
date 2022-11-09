@@ -147,6 +147,10 @@ app.delete('/comment/:id', async(req, res)=>{
     res.send(result)
 })
 
+// update comment api create
+app.patch('/comment/:id', async(req, res)=>{
+    
+})
 
 app.get('/', (req, res)=>{
     res.send('server is running') 
