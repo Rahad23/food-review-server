@@ -122,6 +122,49 @@ app.get('/comment/:id', async(req, res)=>{
     }
 })
 
+// edit comment api
+app.get('/commentUpdate/:id', async(req, res)=>{
+   try{
+    const id = req.params.id;
+    const query = {_id: ObjectId(id)};
+    const cursor = await collectionComment.findOne(query);
+    res.send(cursor);
+   }
+   catch(e){
+    res.send(e.message);
+   }
+})
+
+// update feedback
+app.patch('/commentUpdate/:id', async(req, res)=>{
+    const produtctId = req.params.id;
+    // console.log(req.body);
+    try{
+        const query = {_id: ObjectId(produtctId)};
+        // const result = await productStoreDataBase.updateOne(query);
+        const result = await collectionComment.updateOne (query ,{ $set: req.body });
+        console.log(result);
+        res.send(result);
+        // console.log(produtctId);
+       }
+       catch(e){
+            res.send({
+                response: false,
+                message: e.message,
+            })
+       }
+   
+})
+
+// user feedback delete api
+app.delete('/comment/:id', async(req, res)=>{
+    const id = req.params.id;
+    const query = {_id: ObjectId(id)};
+    const result = await collectionComment.deleteOne(query);
+    res.send(result);
+})
+
+
 // service user review fiend
 app.get('/userReview/:email', async(req, res)=>{
    try{
@@ -139,17 +182,10 @@ app.get('/userReview/:email', async(req, res)=>{
    }
 })
 
-// user feedback delete api
-app.delete('/comment/:id', async(req, res)=>{
-    const id = req.params.id;
-    const query = {_id: ObjectId(id)};
-    const result = await collectionComment.deleteOne(query);
-    res.send(result)
-})
 
 // update comment api create
 app.patch('/comment/:id', async(req, res)=>{
-    
+    console.log(req.params.id);
 })
 
 app.get('/', (req, res)=>{
