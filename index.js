@@ -13,7 +13,7 @@ const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PAS
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-
+// all collection
 const collection = client.db("AllFood").collection("Food");
 const collectionOwner = client.db("AllFood").collection("ownerData");
 const collectionHowItWork = client.db("AllFood").collection("howItWorks");
@@ -25,14 +25,14 @@ const collectionComment = client.db("AllFood").collection("feedback");
 function verifyJwt(req, res, next){
     const authorize = req.headers.authorization;
     if(!authorize){
-        console.log("No header");
+        // console.log("No header");
       return res.status(401).send({message: "Unauthorize user"});
     }
     const key = authorize.split(' ')[1];
 
     jwt.verify(key, process.env.SECURITY_KEY, function(err, decode){
       if(err){
-        console.log(err)
+        // console.log(err)
         return res.status(401).send({message: "Unauthorize user"});
       }
       req.decode = decode;
@@ -167,7 +167,7 @@ app.patch('/commentUpdate/:id', async(req, res)=>{
         const query = {_id: ObjectId(produtctId)};
         // const result = await productStoreDataBase.updateOne(query);
         const result = await collectionComment.updateOne (query ,{ $set: req.body });
-        console.log(result);
+        // console.log(result);
         res.send(result);
         // console.log(produtctId);
        }
