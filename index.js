@@ -187,6 +187,7 @@ app.delete('/comment/:id', async(req, res)=>{
     const result = await collectionComment.deleteOne(query);
     res.send(result);
 })
+ 
 
 
 // service user review fiend
