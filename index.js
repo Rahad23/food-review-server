@@ -137,7 +137,9 @@ app.get('/comment/:id', async(req, res)=>{
         const id = req.params.id;
         const query ={foodId: id};
 
-        const cursor = collectionComment.find(query).sort({ time: -1, _id: id });
+        const cursor = collectionComment.find(query).sort({
+            time: -1,
+        });
         const result = await cursor.toArray();
         res.send(result);
     }
@@ -202,7 +204,9 @@ app.get('/userReview/:email', verifyJwt, async(req, res)=>{
     const useremail = req.params?.email;
     if(useremail){
         const query = {email: useremail};
-        const cursor = collectionComment.find(query);
+        const cursor = collectionComment.find(query).sort({
+            time:-1,
+        });
         const result = await cursor.toArray();
         res.send(result);
     }
